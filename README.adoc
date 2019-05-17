@@ -34,7 +34,7 @@ On Tomcat the sample works for both request dispatch (i.e. http://localhost:8080
 
 A few observations:
 
-- `RequestWrapperFilter is invoked the first time and it wraps the request
+- `RequestWrapperFilter` is invoked the first time and it wraps the request
 - `RequestWrapperFilter` is invoked on the error dispatch because the `hasAlreadyFilteredAttribute` is `true`
 - `RequestWrapperFilter` finally block which clears the attributes is invoked before the controller is invoked
 

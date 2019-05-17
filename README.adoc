@@ -1,5 +1,7 @@
 = Problem
 
+NOTE: This was reported via https://github.com/spring-projects/spring-framework/issues/22989 and https://github.com/spring-projects/spring-session/issues/1308
+
 It appears that instances of `OncePerRequestFilter` do not get invoked for error dispatch types on Jetty even when the following conditions are true:
 
 - The Filter is configured to dispatch on error dispatch types

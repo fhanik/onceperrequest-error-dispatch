@@ -1,0 +1,55 @@
+= Problem
+
+It appears that instances of `OncePerRequestFilter` do not get invoked for error dispatch types on Jetty even when the following conditions are true:
+
+- The Filter is configured to dispatch on error dispatch types
+- The Filter returns `false` for `shouldNotFilterErrorDispatch`
+
+= Sample
+
+I created a simple application that demonstrates the issue.
+
+- `RequestWrapperFilter`
+  - Is an instance of `OncePerRequestFilter` which returns `false` for `shouldNotFilterErrorDispatch`
+  - Wraps the `HttpServletRequest` with a dummy `RequestWrapper`
+- `IndexController`
+  - processes `/` and `/error`
+  - sets a model attribute for `isWrapped` based on if the `HttpServletRequest` is wrapped by `RequestWrapper`
+
+== Jetty
+
+You can run on Jetty using the jetty profile (default).
+On Jetty the sample works for request dispatch (i.e. http://localhost:8080/) and fails for error dispatch (i.e. http://localhost:8080/notfound)
+
+A few observations:
+
+- `RequestWrapperFilter is invoked the first time and it wraps the request (expected)
+- `RequestWrapperFilter` is not invoked on the error dispatch because the `hasAlreadyFilteredAttribute` is `true` (surprising)
+- `RequestWrapperFilter` finally block which clears the attributes is not invoked until after the controller is invoked (surprising)
+
+== Tomcat
+
+You can run on Tomcat by ensuring the tomcat profile is active and jetty profile is off.
+On Tomcat the sample works for both request dispatch (i.e. http://localhost:8080/) and error dispatch (i.e. http://localhost:8080/notfound)
+
+A few observations:
+
+- `RequestWrapperFilter is invoked the first time and it wraps the request
+- `RequestWrapperFilter` is invoked on the error dispatch because the `hasAlreadyFilteredAttribute` is `true`
+- `RequestWrapperFilter` finally block which clears the attributes is invoked before the controller is invoked
+
+
+= Tests
+
+To see the failures run the tests with the jetty profile (default).
+You will observe that the test for a page that is not found fails.
+
+----
+./mvnw test
+----
+
+Rerun the tests using tomcat profile and the tests pass.
+
+----
+./mvnw test -Ptomcat
+----

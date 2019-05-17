@@ -23,7 +23,7 @@ On Jetty the sample works for request dispatch (i.e. http://localhost:8080/) and
 
 A few observations:
 
-- `RequestWrapperFilter is invoked the first time and it wraps the request (expected)
+- `RequestWrapperFilter` is invoked the first time and it wraps the request (expected)
 - `RequestWrapperFilter` is not invoked on the error dispatch because the `hasAlreadyFilteredAttribute` is `true` (surprising)
 - `RequestWrapperFilter` finally block which clears the attributes is not invoked until after the controller is invoked (surprising)
 

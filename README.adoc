@@ -9,12 +9,12 @@ It appears that instances of `OncePerRequestFilter` do not get invoked for error
 
 I created a simple application that demonstrates the issue.
 
-- `RequestWrapperFilter`
-  - Is an instance of `OncePerRequestFilter` which returns `false` for `shouldNotFilterErrorDispatch`
-  - Wraps the `HttpServletRequest` with a dummy `RequestWrapper`
-- `IndexController`
-  - processes `/` and `/error`
-  - sets a model attribute for `isWrapped` based on if the `HttpServletRequest` is wrapped by `RequestWrapper`
+* `RequestWrapperFilter`
+** Is an instance of `OncePerRequestFilter` which returns `false` for `shouldNotFilterErrorDispatch`
+** Wraps the `HttpServletRequest` with a dummy `RequestWrapper`
+* `IndexController`
+** processes `/` and `/error`
+** sets a model attribute for `isWrapped` based on if the `HttpServletRequest` is wrapped by `RequestWrapper`
 
 == Jetty
 
